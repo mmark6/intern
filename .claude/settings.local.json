@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python manage.py makemigrations notifications)",
+      "Bash(python manage.py migrate)",
+      "Bash(python -c \"from audit_logs.utils import log_audit; print\\(''log_audit imported successfully''\\)\")",
+      "Bash(python -c \"import django; django.setup\\(\\); from audit_logs.utils import log_audit; print\\(''log_audit imported successfully''\\)\")"
+    ]
+  }
+}
