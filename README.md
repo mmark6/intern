@@ -1,4 +1,8 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+
+>>>>>>> 3894f290d43f43cb2bc3200bfd8a9d7fb41e9ffb
 # UEDCL Project Management System
 
 A full-stack project management application with Django REST Framework backend and React frontend.
@@ -198,6 +202,10 @@ For production deployment:
 - Clear browser localStorage
 - Check that the JWT token is being sent in the Authorization header
 - Verify token expiration times in Django settings
+<<<<<<< HEAD
 =======
 # intern
 >>>>>>> origin/main
+=======
+
+>>>>>>> 3894f290d43f43cb2bc3200bfd8a9d7fb41e9ffb
