@@ -125,7 +125,7 @@ class LoginView(views.APIView):
         # Log successful login
         try:
             from audit_logs.utils import log_audit
-            log_audit(request, 'LOGIN', 'USER', user.id, user.username, 'User logged in')
+            log_audit(request, 'LOGIN', 'USER', user.id, user.username, 'User logged in', user=user)
         except Exception:
             pass
         refresh = RefreshToken.for_user(user)

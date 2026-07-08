@@ -3,10 +3,12 @@
 from .models import AuditLog
 
 
-def log_audit(request, action, target_type, target_id=None, target_name='', description=''):
+def log_audit(request, action, target_type, target_id=None, target_name='', description='', user=None):
     """Log an audit event."""
 
-    user = request.user if request and hasattr(request, 'user') and request.user.is_authenticated else None
+    if user is None and request and hasattr(request, 'user') and getattr(request.user, 'is_authenticated', False):
+        user = request.user
+
     username = user.username if user else 'Anonymous'
 
     # Get IP address

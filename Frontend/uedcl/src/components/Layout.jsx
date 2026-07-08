@@ -54,11 +54,11 @@ export default function Layout() {
 
       <main className="main-area">
         <header className="topbar">
-          <div>
+          <div className="topbar-copy">
             <h2>Welcome, {user?.name}</h2>
-            <p>{user?.role?.toUpperCase()}</p>
+            <p>{user?.role?.toUpperCase()} workspace.</p>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <div className="topbar-actions">
             <div className="notification-wrapper" style={{ position: 'relative' }}>
               <button
                 className="btn ghost"

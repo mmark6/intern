@@ -4,6 +4,7 @@ from django.test import override_settings
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
+from audit_logs.models import AuditLog
 from users.models import Role, User
 
 
@@ -37,6 +38,44 @@ class LoginAppTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTrue(response.data['success'])
         self.assertIn('access_token', response.data)
+
+    def test_login_creates_audit_log(self):
+        url = reverse('login-login')
+        data = {'username': 'testuser', 'password': 'TestPass123!'}
+        response = self.client.post(url, data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(response.data['success'])
+
+        audit_log = AuditLog.objects.filter(
+            action='LOGIN',
+            target_type='USER',
+            target_id=self.user.id,
+        ).order_by('-timestamp').first()
+
+        self.assertIsNotNone(audit_log)
+        self.assertEqual(audit_log.user, self.user)
+        self.assertEqual(audit_log.username, self.user.username)
+
+    def test_authenticated_request_creates_audit_log(self):
+        url = reverse('login-me')
+        self.client.force_authenticate(user=self.user)
+
+        response = self.client.get(url, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(response.data['success'])
+
+        audit_log = AuditLog.objects.filter(
+            action='VIEW',
+            target_type='USER',
+            target_id=self.user.id,
+            description__icontains='Authenticated request',
+        ).order_by('-timestamp').first()
+
+        self.assertIsNotNone(audit_log)
+        self.assertEqual(audit_log.user, self.user)
+        self.assertEqual(audit_log.username, self.user.username)
 
     def test_me_requires_authentication(self):
         url = reverse('login-me')

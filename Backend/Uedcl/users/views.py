@@ -92,7 +92,8 @@ class LoginView(APIView):
             # Log successful login
             try:
                 from audit_logs.utils import log_audit
-                log_audit(request, 'LOGIN', 'USER', None, data.get('email'), 'User logged in')
+                user_obj = serializer.validated_data.get('user')
+                log_audit(request, 'LOGIN', 'USER', getattr(user_obj, 'id', None), getattr(user_obj, 'username', ''), 'User logged in', user=user_obj)
             except Exception:
                 pass  # Don't break login if audit fails
 

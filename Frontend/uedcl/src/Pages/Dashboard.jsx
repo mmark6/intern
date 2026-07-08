@@ -55,6 +55,20 @@ export default function Dashboard() {
 
   return (
     <div>
+      <section className="hero-panel">
+        <div>
+          <span className="hero-badge">Operations overview</span>
+          <h2>Track work clearly and keep delivery on course.</h2>
+          <p className="hero-copy">
+            Review project health, task progress, and recent activity from one polished workspace designed for efficient management.
+          </p>
+        </div>
+        <div className="hero-actions">
+          <span className="hero-pill">{totalProjects} active projects</span>
+          <span className="hero-pill">{stats?.tasks ?? 0} tracked tasks</span>
+        </div>
+      </section>
+
       <div className="stats-grid">
         <StatCard label="Projects" value={totalProjects} accent="#0f3d62" icon={FolderKanban} />
         <StatCard label="Projects Done" value={stats.projectsCompleted || 0} accent="#1f7a1f" icon={CheckCircle2} />
