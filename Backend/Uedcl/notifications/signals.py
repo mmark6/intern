@@ -69,6 +69,8 @@ def notify_project_deadline(project):
 
 def notify_task_created(task):
     """Create notification when a task is created."""
+    from .email_utils import send_task_assignment_email
+    
     # Notify the assignee if there's one
     if task.assignee:
         title = f"New Task Assigned: {task.title}"
@@ -81,6 +83,8 @@ def notify_task_created(task):
             project_id=task.project_id,
             task_id=task.id,
         )
+        # Send email notification
+        send_task_assignment_email(task.assignee, task)
     else:
         # Notify the project owner
         title = f"New Task: {task.title}"
@@ -96,6 +100,8 @@ def notify_task_created(task):
 
 
 def notify_task_done(task):
+    from .email_utils import send_task_completion_email
+    
     title = f"Task Completed: {task.title}"
     message = f"Task '{task.title}' in project '{task.project.name}' has been marked as done."
     create_notification(
@@ -118,10 +124,14 @@ def notify_task_done(task):
             project_id=task.project_id,
             task_id=task.id,
         )
+        # Send email notification to assignee
+        send_task_completion_email(task.assignee, task)
 
 
 def notify_deadline(task, old_due_date=None):
     """Notify assignee of task deadline changes."""
+    from .email_utils import send_deadline_notification_email
+    
     if not task.assignee or not task.due_date or task.status == 'DONE':
         return
 
@@ -136,13 +146,19 @@ def notify_deadline(task, old_due_date=None):
         # Already overdue or due today
         title = f"Task Due Today: {task.title}"
         message = f"Your task '{task.title}' is due {'today' if due_date == today else 'as of today'}."
+        days_until_due = (due_date - today).days
+        is_overdue = days_until_due < 0
     elif due_date <= today + timedelta(days=1):
         title = f"Task Due Tomorrow: {task.title}"
         message = f"Your task '{task.title}' is due tomorrow ({due_date})."
+        days_until_due = 1
+        is_overdue = False
     elif due_date <= today + timedelta(days=3):
         days_left = (due_date - today).days
         title = f"Task Due Soon: {task.title}"
         message = f"Your task '{task.title}' is due in {days_left} days ({due_date})."
+        days_until_due = days_left
+        is_overdue = False
     else:
         return  # Not within notification window
 
@@ -154,3 +170,6 @@ def notify_deadline(task, old_due_date=None):
         project_id=task.project_id,
         task_id=task.id,
     )
+    
+    # Send email notification
+    send_deadline_notification_email(task.assignee, task, days_until_due, is_overdue)

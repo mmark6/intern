@@ -1,22 +1,14 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, permissions
+from users.permissions import IsAdminUser
 from .models import AuditLog
 
 
 class AuditLogListView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, IsAdminUser]
 
     def get(self, request):
-        # Only admin can view audit logs
-        role = getattr(request.user, 'role', None)
-        role_name = getattr(role, 'name', '') if role else ''
-        if role_name != 'ADMIN':
-            return Response({
-                'success': False,
-                'error': 'Permission denied. Admin role required.',
-            }, status=status.HTTP_403_FORBIDDEN)
-
         logs = AuditLog.objects.order_by('-timestamp')[:100]  # Last 100 logs
 
         data = []

@@ -1,0 +1,36 @@
+Task Deadline Notification
+==========================
+
+Hello {{ user.first_name|default:user.username }},
+
+{% if is_overdue %}
+ OVERDUE TASK ALERT
+Your task {{ deadline_text }}.
+{% else %}
+ UPCOMING DEADLINE
+Your task {{ deadline_text }}.
+{% endif %}
+
+Task Details:
+-------------
+Title: {{ task.title }}
+Project: {{ project.name }}
+Status: {{ task.get_status_display }}
+Priority: {{ task.get_priority_display }}
+Due Date: {{ task.due_date }}
+{% if task.description %}
+Description: {{ task.description|truncatewords:30 }}
+{% endif %}
+
+{% if task_url %}
+View Task Details: {{ task_url }}
+{% endif %}
+
+Please take necessary action to complete this task on time.
+
+Best regards,
+Task Management System
+
+---
+This is an automated email. Please do not reply to this message.
+To manage your email notification preferences, visit your account settings.

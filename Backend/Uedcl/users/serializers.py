@@ -66,6 +66,8 @@ class UserSerializer(serializers.ModelSerializer):
             "updated_at",
             "password",
             "password2",
+            "email_notifications_enabled",
+            "notify_before_days",
         ]
 
     def validate_username(self, value):

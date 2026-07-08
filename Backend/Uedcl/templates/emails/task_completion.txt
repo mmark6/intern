@@ -1,0 +1,35 @@
+Task Completed
+==============
+
+Hello {{ user.first_name|default:user.username }},
+
+Great news! A task has been marked as completed.
+
+Task Details:
+-------------
+Title: {{ task.title }}
+Project: {{ project.name }}
+Status: {{ task.get_status_display }}
+Priority: {{ task.get_priority_display }}
+{% if task.due_date %}
+Due Date: {{ task.due_date }}
+{% endif %}
+{% if task.actual_hours %}
+Actual Hours: {{ task.actual_hours }}
+{% endif %}
+{% if task.description %}
+Description: {{ task.description|truncatewords:30 }}
+{% endif %}
+
+{% if task_url %}
+View Task Details: {{ task_url }}
+{% endif %}
+
+Congratulations on completing this task!
+
+Best regards,
+Task Management System
+
+---
+This is an automated email. Please do not reply to this message.
+To manage your email notification preferences, visit your account settings.

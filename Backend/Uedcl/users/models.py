@@ -38,6 +38,16 @@ class User(AbstractUser):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True, blank=True)
     
+    # Email notification preferences
+    email_notifications_enabled = models.BooleanField(
+        default=True,
+        help_text="Receive email notifications for task deadlines"
+    )
+    notify_before_days = models.IntegerField(
+        default=3,
+        help_text="Number of days before deadline to send notification"
+    )
+    
     # Username validation
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['email']
